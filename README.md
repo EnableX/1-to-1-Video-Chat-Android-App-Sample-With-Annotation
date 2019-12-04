@@ -20,7 +20,7 @@ This App creates a virtual Room on the fly  hosted on the Enablex platform using
 
 #### 1.1.2 Sample Android Client 
 
-* Clone or download this Repository [https://github.com/EnableX/One-to-One-Video-Call-Webrtc-Application-Sample-for-Android.git] 
+* Clone or download this Repository [https://github.com/EnableX/1-to-1-Video-Chat-Android-App-Sample-With-Annotation.git] 
 
 
 #### 1.1.3 Sample App Server 
