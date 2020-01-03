@@ -210,8 +210,13 @@ public class VideoConferenceActivity extends AppCompatActivity
     }
 
     @Override
-    public void onReceivedChatDataAtRoom(JSONObject jsonObject) {
-        // received when chat data received at room
+    public void onMessageReceived(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onUserDataReceived(JSONObject jsonObject) {
+
     }
 
     @Override
