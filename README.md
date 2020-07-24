@@ -51,6 +51,8 @@ This App creates a virtual Room on the fly  hosted on the Enablex platform using
 * You need to create a Room by clicking the "Create Room" button.
 * Once the Room Id is created, you can use it and share with others to connect to the Virtual Room to carry out a RTC Session.
   
+  Note:- If you used any emulator/simulator your local stream will not create. It will create only on real device.
+  
 ## 2 Server API
 
 EnableX Server API is a Rest API service meant to be called from Partners' Application Server to provision video enabled 
