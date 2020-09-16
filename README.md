@@ -13,7 +13,7 @@ This App creates a virtual Room on the fly  hosted on the Enablex platform using
 
 #### 1.1.1 App Id and App Key 
 
-* Register with EnableX [https://portal.enablex.io/cpaas/trial-sign-up/] 
+* Register with EnableX [https://www.enablex.io] 
 * Create your Application
 * Get your App ID and App Key delivered to your Email
 
@@ -251,6 +251,8 @@ Following are the observers:
 ![screenshot1](./screenshot1.png)	![screenshot2](./screenshot2.png)	![screenshot3](./screenshot3.png)	![screenshot4](./screenshot4.png)	![screenshot4](./screenshot5.png)
 
     
-## 5 Trial
+## 5 Demo
 
-Sign up for a free trial https://portal.enablex.io/cpaas/trial-sign-up/ or try our multiparty video chat https://try.enablex.io/.
+Visit Demo Zone (https://portal.enablex.io/demo-zone/) to request a Guided Demo or Demo Access to different type of application available there.
+
+You may also try our Video Meeting and Webinar solutions here: https://enablex.io/vcfree

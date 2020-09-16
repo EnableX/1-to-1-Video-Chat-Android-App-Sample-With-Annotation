@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import enx_rtc_android.Controller.EnxActiveTalkerViewObserver;
 import enx_rtc_android.Controller.EnxAnnotationObserver;
 import enx_rtc_android.Controller.EnxPlayerView;
 import enx_rtc_android.Controller.EnxReconnectObserver;
@@ -46,7 +49,7 @@ import enx_rtc_android.annotations.EnxAnnotationsView;
 
 
 public class VideoConferenceActivity extends AppCompatActivity
-        implements EnxRoomObserver, EnxStreamObserver, View.OnClickListener, EnxReconnectObserver, EnxAnnotationObserver {
+        implements EnxRoomObserver, EnxStreamObserver, View.OnClickListener, EnxReconnectObserver, EnxAnnotationObserver, EnxActiveTalkerViewObserver {
 
     EnxRtc enxRtc;
     String token;
@@ -55,14 +58,12 @@ public class VideoConferenceActivity extends AppCompatActivity
     FrameLayout moderator, participant;
     ImageView disconnect;
     ImageView mute, video, camera, volume, annotations;
-    private TextView audioOnlyText;
     EnxRoom enxRooms;
     boolean isVideoMuted = false;
     boolean isFrontCamera = true;
     boolean isAudioMuted = false;
     Gson gson;
     EnxStream localStream;
-    EnxPlayerView enxPlayerViewRemote;
     ProgressDialog progressDialog;
     int PERMISSION_ALL = 1;
     String[] PERMISSIONS = {
@@ -75,9 +76,9 @@ public class VideoConferenceActivity extends AppCompatActivity
     /* For Annotations */
 
     private boolean startAnnotation;
-    private EnxAnnotationsView annotationsView;
     private RelativeLayout mAnnotationViewContainer;
-    private EnxAnnotationsToolbar mAnnotationsToolbar;
+    RecyclerView mRecyclerView;
+    EnxAnnotationsToolbar enxAnnotationsToolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class VideoConferenceActivity extends AppCompatActivity
         if (enxRooms != null) {
             enxRooms.setReconnectObserver(this);
             enxRooms.setAnnotationObserver(this);
+            enxRooms.setActiveTalkerViewObserver(this);
             enxRooms.publish(localStream);
         }
     }
@@ -156,35 +158,24 @@ public class VideoConferenceActivity extends AppCompatActivity
         this.finish();
     }
 
+    //Deprecated
     @Override
     public void onActiveTalkerList(JSONObject jsonObject) {
         //received when Active talker update happens
-        try {
-            Map<String, EnxStream> map = enxRooms.getRemoteStreams();
-            JSONArray jsonArray = jsonObject.getJSONArray("activeList");
-            if (jsonArray.length() == 0) {
-                audioOnlyText.setVisibility(View.GONE);
-                View temp = participant.getChildAt(0);
-                participant.removeView(temp);
-                return;
-            } else {
-                JSONObject jsonStreamid = jsonArray.getJSONObject(0);
-                String streamID = jsonStreamid.getString("streamId");
-                EnxStream stream = map.get(streamID);
-                if (enxPlayerViewRemote == null) {
-                    enxPlayerViewRemote = new EnxPlayerView(VideoConferenceActivity.this, EnxPlayerView.ScalingType.SCALE_ASPECT_BALANCED, false);
-                    stream.attachRenderer(enxPlayerViewRemote);
-                    participant.addView(enxPlayerViewRemote);
-                }
+       // Deprecated.
+    }
 
-                if (stream.isAudioOnlyStream()) {
-                    audioOnlyText.setVisibility(View.VISIBLE);
-                } else {
-                    audioOnlyText.setVisibility(View.GONE);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    @Override
+    public void onActiveTalkerList(RecyclerView recyclerView) {
+
+        mRecyclerView = recyclerView;
+        if (recyclerView == null) {
+            participant.removeAllViews();
+
+        } else {
+            participant.removeAllViews();
+            participant.addView(recyclerView);
+
         }
     }
 
@@ -335,9 +326,12 @@ public class VideoConferenceActivity extends AppCompatActivity
             case R.id.startAnnotations:
                 if (enxRooms != null) {
                     if (!startAnnotation) {
-                        enxRooms.startAnnotation();
+                        if (enxRooms.getActiveTalkers() != null && enxRooms.getActiveTalkers().size() > 0) {
+                            EnxStream enxStream = enxRooms.getActiveTalkers().get(0);
+                            enxRooms.startAnnotation(enxStream);
+                        }
                     } else {
-                        Toast.makeText(this, "annotation is already started", Toast.LENGTH_SHORT).show();
+                        enxRooms.stopAnnotations();
                     }
                 }
                 break;
@@ -385,15 +379,6 @@ public class VideoConferenceActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (enxPlayerViewRemote != null) {
-            enxPlayerViewRemote.release();
-        }
-        if (localPlayerView != null) {
-            localPlayerView.release();
-        }
-        if (localStream != null) {
-            localStream.detachRenderer();
-        }
         if (enxRooms != null) {
             enxRooms = null;
         }
@@ -408,8 +393,9 @@ public class VideoConferenceActivity extends AppCompatActivity
         gson = new Gson();
         getSupportActionBar().setTitle("QuickApp");
         enxRtc = new EnxRtc(this, this, this);
-        localStream = enxRtc.joinRoom(token, getLocalStreamJsonObject(), getReconnectInfo(), null);
+        localStream = enxRtc.joinRoom(token, getLocalStreamJsonObject(), getReconnectInfo(), new JSONArray());
         localPlayerView = new EnxPlayerView(this, EnxPlayerView.ScalingType.SCALE_ASPECT_FILL, true);
+        enxAnnotationsToolbar = (EnxAnnotationsToolbar) findViewById(R.id.annotations_bar);
         localStream.attachRenderer(localPlayerView);
         moderator.addView(localPlayerView);
         progressDialog = new ProgressDialog(this);
@@ -433,11 +419,8 @@ public class VideoConferenceActivity extends AppCompatActivity
         video = (ImageView) findViewById(R.id.video);
         camera = (ImageView) findViewById(R.id.camera);
         volume = (ImageView) findViewById(R.id.volume);
-        audioOnlyText = (TextView) findViewById(R.id.audioonlyText);
-        audioOnlyText.setVisibility(View.GONE);
         annotations = (ImageView) findViewById(R.id.startAnnotations);
         mAnnotationViewContainer = (RelativeLayout) findViewById(R.id.annoation_view_container);
-        mAnnotationsToolbar = (EnxAnnotationsToolbar) findViewById(R.id.annotations_bar);
     }
 
     private JSONObject getLocalStreamJsonObject() {
@@ -445,18 +428,18 @@ public class VideoConferenceActivity extends AppCompatActivity
         try {
             jsonObject.put("audio", true);
             jsonObject.put("video", true);
-            jsonObject.put("data", false);
-            jsonObject.put("maxVideoBW", 400); //2048
-            jsonObject.put("minVideoBW", 300);
+            jsonObject.put("data", true);
             JSONObject videoSize = new JSONObject();
-            videoSize.put("minWidth", 720);
-            videoSize.put("minHeight", 480);
+            videoSize.put("minWidth", 320);
+            videoSize.put("minHeight", 180);
             videoSize.put("maxWidth", 1280);
             videoSize.put("maxHeight", 720);
             jsonObject.put("videoSize", videoSize);
-            jsonObject.put("audioMuted", false);
-            jsonObject.put("videoMuted", false);
-            jsonObject.put("name", name);
+            jsonObject.put("audioMuted", "false");
+            jsonObject.put("videoMuted", "false");
+            JSONObject attributes = new JSONObject();
+            attributes.put("name", "myStream");
+            jsonObject.put("attributes", attributes);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -473,9 +456,24 @@ public class VideoConferenceActivity extends AppCompatActivity
     public JSONObject getReconnectInfo() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("allow_reconnect", true);
-            jsonObject.put("number_of_attempts", 3);
-            jsonObject.put("timeout_interval", 15);
+            jsonObject.put("allow_reconnect",true);
+            jsonObject.put("number_of_attempts",3);
+            jsonObject.put("timeout_interval",15);
+            jsonObject.put("activeviews","view");//view
+
+            JSONObject object = new JSONObject();
+            object.put("audiomute",true);
+            object.put("videomute",true);
+            object.put("bandwidth",true);
+            object.put("screenshot",true);
+            object.put("avatar",true);
+
+            object.put("iconColor", getResources().getColor(R.color.colorPrimary));
+            object.put("iconHeight",30);
+            object.put("iconWidth",30);
+            object.put("avatarHeight",200);
+            object.put("avatarWidth",200);
+            jsonObject.put("playerConfiguration",object);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -540,10 +538,6 @@ public class VideoConferenceActivity extends AppCompatActivity
                 localPlayerView.release();
                 localPlayerView = null;
             }
-            if (enxPlayerViewRemote != null) {
-                enxPlayerViewRemote.release();
-                enxPlayerViewRemote = null;
-            }
             enxRooms.disconnect();
         } else {
             this.finish();
@@ -574,64 +568,62 @@ public class VideoConferenceActivity extends AppCompatActivity
         Toast.makeText(this, "Reconnect Success", Toast.LENGTH_SHORT).show();
     }
 
-    private void showAnnotationsView() {
-        try {
+    @Override
+    public void onConferencessExtended(JSONObject jsonObject) {
 
-            mAnnotationsToolbar.setVisibility(View.VISIBLE);
-
-            annotationsView = enxRooms.initAnnotationView(mAnnotationsToolbar, true);
-            ((ViewGroup) mAnnotationViewContainer).addView(annotationsView);
-            mAnnotationViewContainer.setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
+    @Override
+    public void onConferenceRemainingDuration(JSONObject jsonObject) {
+
+    }
 
     @Override
-    public void onStartedAnnotations(EnxStream enxStream) {
-        // Received when annotations is started
+    public void onAckDropUser(JSONObject jsonObject) {
 
+    }
+
+    @Override
+    public void onAckDestroy(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onAnnotationStarted(EnxStream enxStream) {
+        mAnnotationViewContainer.setVisibility(View.VISIBLE);
+        mAnnotationViewContainer.removeAllViews();
+        mAnnotationViewContainer.addView(enxStream.mEnxPlayerView);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                enxRooms.adjustLayout();
+            }
+        }, 3000);
+    }
+
+    @Override
+    public void onStartAnnotationAck(JSONObject jsonObject) {
         startAnnotation = true;
-
-        if (localStream != null) {
-            localStream.detachRenderer();
-            localStream = null;
-        }
-        localStream = enxStream;
-
-        moderator.removeView(localPlayerView);
-        moderator.setVisibility(View.GONE);
-        showAnnotationsView();
+        enxAnnotationsToolbar.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onSelectedAnnotations(EnxAnnotationsView.Mode mode) {
-        // Received when user select toolbar
+    public void onAnnotationStopped(EnxStream enxStream) {
+        mAnnotationViewContainer.setVisibility(View.GONE);
+        mAnnotationViewContainer.removeAllViews();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                enxRooms.adjustLayout();
+            }
+        }, 1000);
     }
 
     @Override
-    public void onCompletedAnnotations() {
-        // Received when user complete annotations
-    }
-
-    @Override
-    public void onCancelledAnnotations() {
-        // Received when user cancel annotations
-        if (enxRooms != null) {
-            enxRooms.stopAnnotation();
-        }
-    }
-
-    @Override
-    public void onStoppedAnnotations(EnxStream enxStream) {
-        // Received annotations is stopped.
-
+    public void onStoppedAnnotationAck(JSONObject jsonObject) {
         startAnnotation = false;
-        localStream = enxStream;
-        localStream.attachRenderer(localPlayerView);
-        moderator.addView(localPlayerView);
-        moderator.setVisibility(View.VISIBLE);
-        mAnnotationsToolbar.setVisibility(View.GONE);
+        enxAnnotationsToolbar.setVisibility(View.GONE);
     }
 }
