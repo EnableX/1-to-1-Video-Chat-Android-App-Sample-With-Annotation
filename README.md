@@ -251,8 +251,8 @@ Following are the observers:
 ![screenshot1](./screenshot1.png)	![screenshot2](./screenshot2.png)	![screenshot3](./screenshot3.png)	![screenshot4](./screenshot4.png)	![screenshot4](./screenshot5.png)
 
     
-## 5 Demo
+## 5 Trial
 
-Visit Demo Zone (https://portal.enablex.io/demo-zone/) to request a Guided Demo or Demo Access to different type of application available there.
+Try a quick Video Call: https://try.enablex.io/
+Sign up for a free trial https://portal.enablex.io/cpaas/trial-sign-up/
 
-You may also try our Video Meeting and Webinar solutions here: https://enablex.io/vcfree
