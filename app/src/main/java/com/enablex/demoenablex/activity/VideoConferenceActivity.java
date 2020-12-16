@@ -7,20 +7,20 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.enablex.demoenablex.R;
@@ -33,7 +33,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import enx_rtc_android.Controller.EnxActiveTalkerViewObserver;
 import enx_rtc_android.Controller.EnxAnnotationObserver;
@@ -45,7 +44,6 @@ import enx_rtc_android.Controller.EnxRtc;
 import enx_rtc_android.Controller.EnxStream;
 import enx_rtc_android.Controller.EnxStreamObserver;
 import enx_rtc_android.annotations.EnxAnnotationsToolbar;
-import enx_rtc_android.annotations.EnxAnnotationsView;
 
 
 public class VideoConferenceActivity extends AppCompatActivity
@@ -156,13 +154,6 @@ public class VideoConferenceActivity extends AppCompatActivity
     public void onRoomDisConnected(JSONObject jsonObject) {
         //received when Enablex room successfully disconnected
         this.finish();
-    }
-
-    //Deprecated
-    @Override
-    public void onActiveTalkerList(JSONObject jsonObject) {
-        //received when Active talker update happens
-       // Deprecated.
     }
 
     @Override
@@ -280,6 +271,21 @@ public class VideoConferenceActivity extends AppCompatActivity
     }
 
     @Override
+    public void onAckPinUsers(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onAckUnpinUsers(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onPinnedUsers(JSONObject jsonObject) {
+
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.disconnect:
@@ -329,6 +335,8 @@ public class VideoConferenceActivity extends AppCompatActivity
                         if (enxRooms.getActiveTalkers() != null && enxRooms.getActiveTalkers().size() > 0) {
                             EnxStream enxStream = enxRooms.getActiveTalkers().get(0);
                             enxRooms.startAnnotation(enxStream);
+                        }else {
+                            Toast.makeText(this, "No Participant", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         enxRooms.stopAnnotations();
@@ -597,7 +605,11 @@ public class VideoConferenceActivity extends AppCompatActivity
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                enxRooms.adjustLayout();
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int screenWidth = displayMetrics.widthPixels;
+                int screenHeight = displayMetrics.heightPixels;
+                enxRooms.adjustLayout(screenWidth,screenHeight);
             }
         }, 3000);
     }
@@ -616,7 +628,11 @@ public class VideoConferenceActivity extends AppCompatActivity
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                enxRooms.adjustLayout();
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int screenWidth = displayMetrics.widthPixels;
+                int screenHeight = displayMetrics.heightPixels;
+                enxRooms.adjustLayout(screenWidth,screenHeight);
             }
         }, 1000);
     }
