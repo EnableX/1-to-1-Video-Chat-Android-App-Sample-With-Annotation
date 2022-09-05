@@ -157,7 +157,7 @@ public class VideoConferenceActivity extends AppCompatActivity
     }
 
     @Override
-    public void onActiveTalkerList(RecyclerView recyclerView) {
+    public void onActiveTalkerView(RecyclerView recyclerView) {
 
         mRecyclerView = recyclerView;
         if (recyclerView == null) {
@@ -198,6 +198,11 @@ public class VideoConferenceActivity extends AppCompatActivity
 
     @Override
     public void onUserDataReceived(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onUserStartTyping(boolean b) {
 
     }
 
@@ -322,6 +327,26 @@ public class VideoConferenceActivity extends AppCompatActivity
 
     @Override
     public void onRoomBandwidthAlert(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onStopAllSharingACK(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onACKStartLiveTranscription(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onACKStopLiveTranscription(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onTranscriptionEvents(JSONObject jsonObject) {
 
     }
 
