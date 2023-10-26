@@ -1,12 +1,8 @@
-# 1-to-1 RTC Chat App: Web Application using Node.js & EnableX Web Toolkit
+# 1-to-1 RTC: Android App with EnableX Android Toolkit
 
-1-to-1 RTC: A Sample Chat App using Node.js & EnableX Web Toolkit
+This is a Sample Android App that demonstrates the use of EnableX platform Video APIs (https://www.enablex.io/developer/video-api/server-api) and Android Toolkit (https://www.enablex.io/developer/video-api/client-api/android-toolkit/) to build 1-to-1 RTC (Real Time Communication) Application. Using EnableX Video APIs and Android Toolkit, this app makes it easy for developers to build and test video chat solutions on their own devices.  
 
-The Sample Web App demonstrates the use of APIs for EnableX platform to carry out 1-to-1 Chat Application. The main motivation behind this application is to demonstrate usage of APIs and allow developers to ramp up on app by hosting on their own devices instead of directly using servers.
-
-RTC Applications hosted on EnableX platform run natively on supported set of web browsers without any additional plugin downloads.
-
-This basic 1-to-1 Chat Application is developed using HTML, CSS, Bootstrap, JavaScript, jQuery, Node.js and EnxRtc (The EnableX Web Toolkit). 
+This App creates a virtual Room on the fly hosted on the Enablex platform using REST calls and uses the Room credentials (i.e. Room Id) to connect to the virtual Room as a mobile client. The same Room credentials can be shared with others to join the same virtual Room to carry out an RTC session.  
 
 > EnableX Developer Center: https://developer.enablex.io/
 
@@ -20,11 +16,9 @@ This basic 1-to-1 Chat Application is developed using HTML, CSS, Bootstrap, Java
 * Create your Application
 * Get your App ID and App Key delivered to your email
 
-
 #### 1.1.2 Sample Android Client 
 
 * Clone or download this Repository [https://github.com/EnableX/1-to-1-Video-Chat-Android-App-Sample-With-Annotation.git] 
-
 
 #### 1.1.3 Sample App Server 
 
@@ -32,7 +26,6 @@ This basic 1-to-1 Chat Application is developed using HTML, CSS, Bootstrap, Java
 * You need to use App ID and App Key to run this Service. 
 * Your Android Client End Point needs to connect to this Service to create Virtual Room.
 * Follow README file of this Repository to setup the Service.
-
 
 #### 1.1.4 Configure Android Client 
 
