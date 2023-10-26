@@ -1,11 +1,14 @@
-# 1-to-1 RTC: A Sample Android App with EnableX Android Toolkit
+# 1-to-1 RTC Chat App: Web Application using Node.js & EnableX Web Toolkit
 
-This is a Sample Android App that demonstrates the use of EnableX platform Server APIs (https://www.enablex.io/developer/video-api/server-api) and Android Toolkit (https://www.enablex.io/developer/video-api/client-api/android-toolkit/) to build 1-to-1 RTC (Real Time Communication) Application.  It allows developers to ramp up on app development by hosting on their own devices. 
+1-to-1 RTC: A Sample Chat App using Node.js & EnableX Web Toolkit
 
-This App creates a virtual Room on the fly  hosted on the Enablex platform using REST calls and uses the Room credentials (i.e. Room Id) to connect to the virtual Room as a mobile client.  The same Room credentials can be shared with others to join the same virtual Room to carry out an RTC session. 
+The Sample Web App demonstrates the use of APIs for EnableX platform to carry out 1-to-1 Chat Application. The main motivation behind this application is to demonstrate usage of APIs and allow developers to ramp up on app by hosting on their own devices instead of directly using servers.
+
+RTC Applications hosted on EnableX platform run natively on supported set of web browsers without any additional plugin downloads.
+
+This basic 1-to-1 Chat Application is developed using HTML, CSS, Bootstrap, JavaScript, jQuery, Node.js and EnxRtc (The EnableX Web Toolkit). 
 
 > EnableX Developer Center: https://developer.enablex.io/
-
 
 ## 1. How to get started
 
