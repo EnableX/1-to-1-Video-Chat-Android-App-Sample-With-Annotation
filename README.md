@@ -1,11 +1,10 @@
-# 1-to-1 RTC: A Sample Android App with EnableX Android Toolkit
+# 1-to-1 RTC: Android App with EnableX Android Toolkit
 
-This is a Sample Android App that demonstrates the use of EnableX platform Server APIs (https://www.enablex.io/developer/video-api/server-api) and Android Toolkit (https://www.enablex.io/developer/video-api/client-api/android-toolkit/) to build 1-to-1 RTC (Real Time Communication) Application.  It allows developers to ramp up on app development by hosting on their own devices. 
+This is a Sample Android App that demonstrates the use of EnableX platform Video APIs (https://www.enablex.io/developer/video-api/server-api) and Android Toolkit (https://www.enablex.io/developer/video-api/client-api/android-toolkit/) to build 1-to-1 RTC (Real Time Communication) Application. Using EnableX Video APIs and Android Toolkit, this app makes it easy for developers to build and test video chat solutions on their own devices.  
 
-This App creates a virtual Room on the fly  hosted on the Enablex platform using REST calls and uses the Room credentials (i.e. Room Id) to connect to the virtual Room as a mobile client.  The same Room credentials can be shared with others to join the same virtual Room to carry out an RTC session. 
+This App creates a virtual Room on the fly hosted on the Enablex platform using REST calls and uses the Room credentials (i.e. Room Id) to connect to the virtual Room as a mobile client. The same Room credentials can be shared with others to join the same virtual Room to carry out an RTC session.  
 
 > EnableX Developer Center: https://developer.enablex.io/
-
 
 ## 1. How to get started
 
@@ -17,11 +16,9 @@ This App creates a virtual Room on the fly  hosted on the Enablex platform using
 * Create your Application
 * Get your App ID and App Key delivered to your email
 
-
 #### 1.1.2 Sample Android Client 
 
 * Clone or download this Repository [https://github.com/EnableX/1-to-1-Video-Chat-Android-App-Sample-With-Annotation.git] 
-
 
 #### 1.1.3 Sample App Server 
 
@@ -29,7 +26,6 @@ This App creates a virtual Room on the fly  hosted on the Enablex platform using
 * You need to use App ID and App Key to run this Service. 
 * Your Android Client End Point needs to connect to this Service to create Virtual Room.
 * Follow README file of this Repository to setup the Service.
-
 
 #### 1.1.4 Configure Android Client 
 
