@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 34
     defaultConfig {
         applicationId "com.enablex.demoenablex"
         minSdkVersion 24
-        targetSdkVersion 31
+        targetSdkVersion 34
         versionCode 1
         versionName "1.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -45,4 +45,5 @@ dependencies {
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.0" // or the latest version
 }
