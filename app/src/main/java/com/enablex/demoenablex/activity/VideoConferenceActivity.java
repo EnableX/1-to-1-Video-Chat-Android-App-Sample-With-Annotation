@@ -207,14 +207,41 @@ public class VideoConferenceActivity extends AppCompatActivity
     }
 
     @Override
+    public void onACKSendMessage(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onMessageDelete(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onACKDeleteMessage(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onMessageUpdate(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onACKUpdateMessage(JSONObject jsonObject) {
+
+    }
+
+    @Override
     public void onUserDataReceived(JSONObject jsonObject) {
 
     }
 
     @Override
-    public void onUserStartTyping(boolean b) {
+    public void onUserStartTyping(JSONObject jsonObject) {
 
     }
+
+
 
 
 
@@ -341,11 +368,12 @@ public class VideoConferenceActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.disconnect:
+        int id = view.getId();
+
+            if(id== R.id.disconnect) {
                 roomDisconnect();
-                break;
-            case R.id.mute:
+            }
+            else if(id== R.id.mute) {
                 if (localStream != null) {
                     if (!isAudioMuted) {
                         localStream.muteSelfAudio(true);
@@ -353,8 +381,8 @@ public class VideoConferenceActivity extends AppCompatActivity
                         localStream.muteSelfAudio(false);
                     }
                 }
-                break;
-            case R.id.video:
+            }
+            else if(id== R.id.video) {
                 if (localStream != null) {
                     if (!isVideoMuted) {
                         localStream.muteSelfVideo(true);
@@ -362,8 +390,8 @@ public class VideoConferenceActivity extends AppCompatActivity
                         localStream.muteSelfVideo(false);
                     }
                 }
-                break;
-            case R.id.camera:
+            }
+            else if(id== R.id.camera) {
                 if (localStream != null) {
                     if (!isVideoMuted) {
                         if (isFrontCamera) {
@@ -377,13 +405,13 @@ public class VideoConferenceActivity extends AppCompatActivity
                         }
                     }
                 }
-                break;
-            case R.id.volume:
+            }
+            else if(id== R.id.volume) {
                 if (enxRooms != null) {
                     showRadioButtonDialog();
                 }
-                break;
-            case R.id.startAnnotations:
+            }
+            else if(id== R.id.startAnnotations) {
                 if (enxRooms != null) {
                     if (!startAnnotation) {
                         if (enxRooms.getActiveTalkers() != null && enxRooms.getActiveTalkers().size() > 0) {
@@ -396,7 +424,6 @@ public class VideoConferenceActivity extends AppCompatActivity
                         enxRooms.stopAnnotations();
                     }
                 }
-                break;
         }
     }
 
